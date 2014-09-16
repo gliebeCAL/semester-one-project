@@ -1,0 +1,281 @@
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include <stdlib.h>
+#include <time.h>
+
+//Okay, so first make an integer that starts at 0 and adds 1 for every point added on it for the tunnels. This ensures tunnels will never override
+//each other. It was vertex[#].position.x/y
+
+//Okay, gonna need a system to check the previous direction, too. U/D only interacts with L/R and vice-versa. Then probably a way of
+//measuring distance, so it can X/Y
+
+using namespace std;
+
+int main()
+{
+    int rooms = 4;
+    int maxTunnels = 100;
+
+
+    int maxX = 800;
+    int maxY = 600;
+    int minX = 0;
+    int minY = 0;
+    //This is just the max for the level-area.
+
+
+    int roomMax = 20;
+    int roomMin = 5;
+    int tunnelSizeMin = 10;
+    int tunnelSizeMax = 30;
+    //Sets caps for the room and tunnel sizes (Widths for tunnel, size for rooms)
+
+    int wallLengthX,wallLengthY;
+    //wallLengths are to mod width/height of the rooms.
+
+    wallLengthX = (roomMin) * 10;
+    wallLengthY = (roomMin) * 10;
+    //This would normally random-grab a number between min and max, but this is proof of concept, so nothing that fancy
+    //yet.
+
+    bool corner1 = false;
+    bool corner2 = false;
+    bool corner3 = false;
+    bool corner4 = false;
+
+    sf::Vertex roomCount[500];
+    float pointX, pointY;
+    int roomTotal;
+    //Used to make the rooms.
+
+    srand (time(NULL));
+    //Sets the random
+
+    pointX = rand() % (maxX + 1);
+    pointY = rand() % (maxY + 1);
+
+    int roomPoints = rooms * 4;
+
+    //Some of these variables are adjustable to help create a random-er room.
+
+    int firstRoomDir;
+    int secondRoomDir;
+    bool tunnelOccupied[15];
+    //15 because 4 rooms
+
+    int tunnelDirSet[5];
+    //0-Up 1-Right 2-Down 3-Left
+    int tunDir;
+    //0 for Left/Up, 1 for Right/Down. I MISSPELLED TURN SO IT'S TUN NOW. NO I DIDN'T IT'S SHORT FOR TUNNEL.
+    bool goR,goL,goU,goD;
+    //Sets which direction the tunnel goes.
+    bool firstTun = false;
+    sf::Vertex tunnelCount[500];
+
+    //For standard tunnel making.
+
+
+
+    pointX = rand() % maxX + 1;
+    pointY = rand() % maxY + 1;
+    //places the first point anywhere
+
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
+
+    //Generates the path of rooms from start to finish.
+
+    for (int r=0;r<roomPoints;r++)
+    {
+        //These 4 make the corner for each square.
+        if (corner1 == false)
+        {
+            corner1 = true;
+
+            roomCount[r] = sf::Vector2f(pointX,pointY);
+
+        }
+        else if (corner2 == false)
+        {
+            corner2 = true;
+
+            roomCount[r] = sf::Vector2f(pointX + wallLengthX,pointY);
+
+        }
+        else if (corner3 == false)
+        {
+            corner3 = true;
+
+            roomCount[r] = sf::Vector2f(pointX + wallLengthX,pointY + wallLengthY);
+
+        }
+        else if (corner4 == false)
+        {
+            corner4 = true;
+
+            roomCount[r] = sf::Vector2f(pointX,pointY + wallLengthY);
+        }
+
+        if (corner1 == true and corner2 == true and corner3 == true and corner4 == true)
+        {
+            corner1 = false;
+            corner2 = false;
+            corner3 = false;
+            corner4 = false;
+
+            pointX = (roomMin) * 10;
+            pointY = (roomMin) * 10;
+
+            pointX = rand() % (maxX + 1);
+            pointY = rand() % (maxY + 1);
+
+            //Resets for more rooms
+        }
+        //Has no collision testing.
+        roomTotal = r;
+    }
+
+    //Now for tunnels
+
+    //Hm. Procedurally generated tunnels are harder then I thought, because you have to count for all sides.
+    for (int t=0;t<roomTotal;t+=4)
+    {
+        firstRoomDir = rand() % 4 + t;
+        secondRoomDir = rand() % 4 + t + 4;
+
+
+        //Checks if the spot is occupied.
+        if (tunnelOccupied[firstRoomDir] == true)
+        {
+            while (tunnelOccupied[firstRoomDir] == true)
+            {
+                firstRoomDir = rand() % 4 + t;
+            }
+        }
+        else
+        {
+            tunnelOccupied[firstRoomDir] = true;
+        }
+
+
+        //Checks if the spot is occupied.
+        if (tunnelOccupied[secondRoomDir] == true)
+        {
+            while (tunnelOccupied[secondRoomDir] == true)
+            {
+                secondRoomDir = rand() % 4 + t + 4;
+            }
+        }
+        else
+        {
+            tunnelOccupied[secondRoomDir] = true;
+        }
+
+        //Determines the path the tunnel will take.
+        tunnelDirSet[0] = firstRoomDir % 4;
+        tunDir = rand() % 2;
+        //0-1
+
+
+        if (roomCount[firstRoomDir].position.x < roomCount[secondRoomDir].position.x)
+        {
+            goL = false;
+            goR = true;
+
+        }
+        else if (roomCount[firstRoomDir].position.x > roomCount[secondRoomDir].position.x)
+        {
+            goL = true;
+            goR = false;
+
+        }
+        else if (roomCount[firstRoomDir].position.x == roomCount[secondRoomDir].position.x)
+        {
+            goR = false;
+            goL = false;
+        }
+
+        if (roomCount[firstRoomDir].position.y < roomCount[secondRoomDir].position.y)
+        {
+            goU = false;
+            goD = true;
+        }
+        else if (roomCount[firstRoomDir].position.y > roomCount[secondRoomDir].position.y)
+        {
+            goU = true;
+            goD = false;
+        }
+        else if (roomCount[firstRoomDir].position.y == roomCount[secondRoomDir].position.y)
+        {
+            goU = false;
+            goD = false;
+        }
+
+
+
+        for(int p = 0;p<21;p++)
+        {
+            if (firstTun == false)
+            {
+                if (tunnelDirSet[0] == 0)
+                {
+
+                }
+                else if (tunnelDirSet[0] == 1)
+                {
+
+                }
+                else if (tunnelDirSet[0] == 2)
+                {
+
+                }
+                else if (tunnelDirSet[0] == 3)
+                {
+
+                }
+
+                firstTun = true;
+            }
+
+            if (goU == true and (tunnelDirSet == 1 or tunnelDirSet == 3))
+            {
+
+            }
+
+            if (goD == true and (tunnelDirSet == 1 or tunnelDirSet == 3))
+            {
+
+            }
+
+            if (goL == true and (tunnelDirSet == 0 or tunnelDirSet == 2))
+            {
+
+            }
+
+            if (goR == true and (tunnelDirSet == 0 or tunnelDirSet == 2))
+            {
+
+            }
+        }
+        firstTun = false;
+
+    }
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+            {
+                window.close();
+            }
+
+        }
+        window.clear(sf::Color::Black);
+        //Found the problem! I was writing it and then clearing it immediately.
+
+        window.draw(roomCount,roomPoints,sf::Quads);
+
+        window.display();
+    }
+}

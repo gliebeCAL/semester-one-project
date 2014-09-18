@@ -3,12 +3,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-//Okay, so first make an integer that starts at 0 and adds 1 for every point added on it for the tunnels. This ensures tunnels will never override
-//each other. It was vertex[#].position.x/y
-
-//Okay, gonna need a system to check the previous direction, too. U/D only interacts with L/R and vice-versa. Then probably a way of
-//measuring distance, so it can X/Y
-
 using namespace std;
 
 int main()
@@ -66,11 +60,14 @@ int main()
     int tunnelDirSet[5];
     //0-Up 1-Right 2-Down 3-Left
     int tunDir;
-    //0 for Left/Up, 1 for Right/Down. I MISSPELLED TURN SO IT'S TUN NOW. NO I DIDN'T IT'S SHORT FOR TUNNEL.
+    //0 for Left/Up, 1 for Right/Down. I MISSPELLED TURN SO IT'S TUN NOW.
     bool goR,goL,goU,goD;
     //Sets which direction the tunnel goes.
     bool firstTun = false;
     sf::Vertex tunnelCount[500];
+
+    int currTunPos = 0;
+    int tunPrevDir;
 
     //For standard tunnel making.
 
@@ -89,6 +86,7 @@ int main()
         //These 4 make the corner for each square.
         if (corner1 == false)
         {
+            cout << "On";
             corner1 = true;
 
             roomCount[r] = sf::Vector2f(pointX,pointY);
@@ -96,6 +94,7 @@ int main()
         }
         else if (corner2 == false)
         {
+            cout << " The";
             corner2 = true;
 
             roomCount[r] = sf::Vector2f(pointX + wallLengthX,pointY);
@@ -103,6 +102,7 @@ int main()
         }
         else if (corner3 == false)
         {
+            cout << " Red";
             corner3 = true;
 
             roomCount[r] = sf::Vector2f(pointX + wallLengthX,pointY + wallLengthY);
@@ -110,9 +110,11 @@ int main()
         }
         else if (corner4 == false)
         {
+            cout << " Mile..." << endl;
             corner4 = true;
 
             roomCount[r] = sf::Vector2f(pointX,pointY + wallLengthY);
+
         }
 
         if (corner1 == true and corner2 == true and corner3 == true and corner4 == true)
@@ -218,45 +220,242 @@ int main()
             {
                 if (tunnelDirSet[0] == 0)
                 {
+                    tunPrevDir = 0;
+
+                    pointX = rand() % (roomCount[firstRoomDir+1].position.x - roomCount[firstRoomDir].position.x) + roomCount[firstRoomDir].position.x;
+                    //This should have a random distance between firstROomDir and firstRoomDir + 1
+                    //Also, should be based on 10's/other value.
+                    pointY = roomCount[firstRoomDir].position.y;
+
+                    if (pointX > (roomCount[firstRoomDir+1].position.x - 10))
+                    {
+                        pointX = (roomCount[firstRoomDir+1].position.x - 10);
+                        //Sets the maximum the X can be.
+                    }
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = sf::Vector2f(pointX + tunnelSizeMin,pointY);
+                    //Settles the two points that don't need an if.
+
+                    if (goU == true)
+                    {
+                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,pointY);
+                        tunnelCount[p+3] = sf::Vector2f(pointX,pointY);
+                    }
+                    else
+                    {
+                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,pointY - 30);
+                        tunnelCount[p+3] = sf::Vector2f(pointX,point - 30);
+                    }
+
+
+                    //last two Y's need to be adjusted.
+
+                    p += 4;
 
                 }
                 else if (tunnelDirSet[0] == 1)
                 {
+                    tunPrevDir = 1;
+
+                    pointX = roomCount[firstRoomDir].position.x;
+                    pointY = roomCount[firstRoomDir].position.y;
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = ;
+                    tunnelCount[p+2] = ;
+                    tunnelCount[p+3] = ;
+
+                    p += 3;
 
                 }
                 else if (tunnelDirSet[0] == 2)
                 {
+                    tunPrevDir = 2;
+
+                    pointX = ;
+                    pointY = ;
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = ;
+                    tunnelCount[p+2] = ;
+                    tunnelCount[p+3] = ;
+
+                    p += 3;
 
                 }
                 else if (tunnelDirSet[0] == 3)
                 {
+                    tunPrevDir = 3;
+
+                    pointX = ;
+                    pointY = ;
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = ;
+                    tunnelCount[p+2] = ;
+                    tunnelCount[p+3] = ;
+
+                    p += 3;
 
                 }
 
                 firstTun = true;
+
+                if (tunPrevDir == 0)
+                {
+                    if (goL == true)
+                    {
+                        tunPrevDir = 3;
+                        goL = false;
+
+                        pointX = ;
+                        pointY = ;
+
+                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                        tunnelCount[p+1] = ;
+                        tunnelCount[p+2] = ;
+                        tunnelCount[p+3] = ;
+
+                    }
+                    else if (goR == true)
+                    {
+                        tunPrevDir = 1;
+                        goR = false;
+
+                        pointX = ;
+                        pointY = ;
+
+                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                        tunnelCount[p+1] = ;
+                        tunnelCount[p+2] = ;
+                        tunnelCount[p+3] = ;
+
+                    }
+                    else
+                    {
+                        //If neither is true...
+                    }
+
+                }
+                else if (tunPrevDir == 1)
+                {
+                    if (goU == true)
+                    {
+                        tunPrevDir = 0;
+                        goU = false;
+
+                        pointX = ;
+                        pointY = ;
+
+                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                        tunnelCount[p+1] = ;
+                        tunnelCount[p+2] = ;
+                        tunnelCount[p+3] = ;
+
+                    }
+                    else if (goD == true)
+                    {
+                        tunPrevDir = 2;
+                        goD = false;
+
+                        pointX = ;
+                        pointY = ;
+
+                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                        tunnelCount[p+1] = ;
+                        tunnelCount[p+2] = ;
+                        tunnelCount[p+3] = ;
+
+                    }
+                    else
+                    {
+                        //If neither is true...
+                    }
+
+                }
+                else if (tunPrevDir == 2)
+                {
+                    if (goL == true)
+                    {
+                        tunPrevDir = 3;
+                        goL = false;
+
+                        pointX = ;
+                        pointY = ;
+
+                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                        tunnelCount[p+1] = ;
+                        tunnelCount[p+2] = ;
+                        tunnelCount[p+3] = ;
+
+                    }
+                    else if (goR == true)
+                    {
+                        tunPrevDir = 1;
+                        goR = false;
+
+                        pointX = ;
+                        pointY = ;
+
+                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                        tunnelCount[p+1] = ;
+                        tunnelCount[p+2] = ;
+                        tunnelCount[p+3] = ;
+
+                    }
+                    else
+                    {
+                        //If neither is true...
+                    }
+
+                }
+                else if (tunPrevDir == 3)
+                {
+                    if (goU == true)
+                    {
+                        tunPrevDir = 0;
+                        goU = false;
+
+                        pointX = ;
+                        pointY = ;
+
+                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                        tunnelCount[p+1] = ;
+                        tunnelCount[p+2] = ;
+                        tunnelCount[p+3] = ;
+
+                    }
+                    else if (goD == true)
+                    {
+                        tunPrevDir = 2;
+                        goD = false;
+
+                        pointX = ;
+                        pointY = ;
+
+                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                        tunnelCount[p+1] = ;
+                        tunnelCount[p+2] = ;
+                        tunnelCount[p+3] = ;
+
+                    }
+                    else
+                    {
+                        //If neither is true...
+                    }
+
+                }
+
+                if ()
+                {
+                    //Wait. Do I even need an if statement for this? I don't think I do.
+                    //Oh, wait, no, it's for if it's here to there, etc.
+                    //This one will check after the movements and dictate the directions.
+                }
             }
-
-            if (goU == true and (tunnelDirSet == 1 or tunnelDirSet == 3))
-            {
-
-            }
-
-            if (goD == true and (tunnelDirSet == 1 or tunnelDirSet == 3))
-            {
-
-            }
-
-            if (goL == true and (tunnelDirSet == 0 or tunnelDirSet == 2))
-            {
-
-            }
-
-            if (goR == true and (tunnelDirSet == 0 or tunnelDirSet == 2))
-            {
-
-            }
+            firstTun = false;
         }
-        firstTun = false;
 
     }
 

@@ -86,7 +86,6 @@ int main()
         //These 4 make the corner for each square.
         if (corner1 == false)
         {
-            cout << "On";
             corner1 = true;
 
             roomCount[r] = sf::Vector2f(pointX,pointY);
@@ -94,7 +93,6 @@ int main()
         }
         else if (corner2 == false)
         {
-            cout << " The";
             corner2 = true;
 
             roomCount[r] = sf::Vector2f(pointX + wallLengthX,pointY);
@@ -102,7 +100,6 @@ int main()
         }
         else if (corner3 == false)
         {
-            cout << " Red";
             corner3 = true;
 
             roomCount[r] = sf::Vector2f(pointX + wallLengthX,pointY + wallLengthY);
@@ -110,7 +107,6 @@ int main()
         }
         else if (corner4 == false)
         {
-            cout << " Mile..." << endl;
             corner4 = true;
 
             roomCount[r] = sf::Vector2f(pointX,pointY + wallLengthY);
@@ -239,19 +235,28 @@ int main()
 
                     if (goU == true)
                     {
-                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,pointY);
-                        tunnelCount[p+3] = sf::Vector2f(pointX,pointY);
+                        if (firstRoomDir % 4 == 0 or firstRoomDir % 4 == 1)
+                        {
+                            tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[firstRoomDir].position.y - 30);
+                            tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[firstRoomDir].position.y - 30);
+                        }
+                        else if (firstRoomDir % 4 == 2 or firstRoomDir % 4 == 3)
+                        {
+                            tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[firstRoomDir].position.y + 30);
+                            tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[firstRoomDir].position.y + 30);
+                        }
+                        // 30 is a random value. It would normally be a random number so long as it exceeds 30. Probably a multiple of 10/whatever,
+                        // though.
                     }
                     else
                     {
                         tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,pointY - 30);
-                        tunnelCount[p+3] = sf::Vector2f(pointX,point - 30);
+                        tunnelCount[p+3] = sf::Vector2f(pointX,pointY - 30);
                     }
 
 
                     //last two Y's need to be adjusted.
 
-                    p += 4;
 
                 }
                 else if (tunnelDirSet[0] == 1)
@@ -266,8 +271,6 @@ int main()
                     tunnelCount[p+2] = ;
                     tunnelCount[p+3] = ;
 
-                    p += 3;
-
                 }
                 else if (tunnelDirSet[0] == 2)
                 {
@@ -280,8 +283,6 @@ int main()
                     tunnelCount[p+1] = ;
                     tunnelCount[p+2] = ;
                     tunnelCount[p+3] = ;
-
-                    p += 3;
 
                 }
                 else if (tunnelDirSet[0] == 3)
@@ -296,9 +297,10 @@ int main()
                     tunnelCount[p+2] = ;
                     tunnelCount[p+3] = ;
 
-                    p += 3;
-
                 }
+
+                p += 4;
+            }
 
                 firstTun = true;
 

@@ -342,7 +342,7 @@ int main()
                     else
                     {
                         tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,pointY + tunnelSizeMin);
-                        tunnelCount[p+3] = sf::Vector2f(pointX,pointY);
+                        tunnelCount[p+3] = sf::Vector2f(pointX + tunnelSizeMin,pointY);
                     }
 
                 }
@@ -379,19 +379,19 @@ int main()
                             }
                             else
                             {
-                            tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y - tunnelSizeMin);
-                            tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y - tunnelSizeMin);
+                            tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y + tunnelSizeMin);
+                            tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y + tunnelSizeMin);
                             }
                         }
                         else if (secondRoomDir % 4 == 1)
                         {
-                            tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y + tunnelSizeMin);
-                            tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y + tunnelSizeMin);
+                            tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y - tunnelSizeMin);
+                            tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y - tunnelSizeMin);
                         }
                         else if (secondRoomDir % 4 == 3)
                         {
-                            tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y + tunnelSizeMin);
-                            tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y + tunnelSizeMin);
+                            tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y - tunnelSizeMin);
+                            tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y - tunnelSizeMin);
                         }
                         else if (secondRoomDir % 4 == 2)
                         {
@@ -414,63 +414,61 @@ int main()
                 }
                 else if (tunnelDirSet[0] == 3)
                 {
-                    tunPrevDir = 1;
+                    tunPrevDir = 3;
 
                     pointX = roomCount[firstRoomDir].position.x;
                     //This should have a random distance between firstROomDir and firstRoomDir + 1
                     //Also, should be based on 10's/other value.
-                    pointY = rand() % (roomCount[firstRoomDir+1].position.y - roomCount[firstRoomDir].position.y) + roomCount[firstRoomDir].position.y;
+                    pointY = rand() % (roomCount[firstRoomDir-3].position.y - roomCount[firstRoomDir].position.y) + roomCount[firstRoomDir].position.y;
 
-                    if (pointY > (roomCount[firstRoomDir+1].position.y - tunnelSizeMin))
+                    if (pointY < (roomCount[firstRoomDir-3].position.y + tunnelSizeMin))
                     {
-                        pointY = (roomCount[firstRoomDir+1].position.y - tunnelSizeMin);
+                        pointY = (roomCount[firstRoomDir-3].position.y + tunnelSizeMin);
                         //Sets the maximum the X can be.
                     }
 
-                    tunPrevDir = 1;
-
                     tunnelCount[p] = sf::Vector2f(pointX,pointY);
-                    tunnelCount[p+1] = sf::Vector2f(pointX,pointY + tunnelSizeMin);
+                    tunnelCount[p+1] = sf::Vector2f(pointX,pointY - tunnelSizeMin);
 
-                    if (goR == true)
+                    if (goL == true)
                     {
                         if (secondRoomDir % 4 == 0)
                         {
-                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY + tunnelSizeMin);
+                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY - tunnelSizeMin);
                             tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY);
                         }
                         else if (secondRoomDir % 4 == 1)
                         {
-                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x + tunnelSizeMin,pointY + tunnelSizeMin);
-                            tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x + tunnelSizeMin,pointY);
-                        }
-                        else if (secondRoomDir % 4 == 2)
-                        {
-                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY + tunnelSizeMin);
-                            tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY);
-                        }
-                        else if (secondRoomDir % 4 == 3)
-                        {
-                            if (goL == false and goU == false and goD == false)
+                            if (goR == false and goU == false and goD == false)
                             {
-                                tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY + tunnelSizeMin);
+                                tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY - tunnelSizeMin);
                                 tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY);
 
                                 tunSessionDone = true;
                             }
                             else
                             {
-                                tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY + tunnelSizeMin);
+                                tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY - tunnelSizeMin);
                                 tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY);
                             }
+                        }
+                        else if (secondRoomDir % 4 == 2)
+                        {
+                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x + tunnelSizeMin,pointY - tunnelSizeMin);
+                            tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x + tunnelSizeMin,pointY);
+                        }
+                        else if (secondRoomDir % 4 == 3)
+                        {
+                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY - tunnelSizeMin);
+                            tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY);
                         }
                         // 30 is a random value. It would normally be a random number so long as it exceeds 30. Probably a multiple of 10/whatever,
                         // though.
                     }
                     else
                     {
-                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,pointY + tunnelSizeMin);
-                        tunnelCount[p+3] = sf::Vector2f(pointX,pointY);
+                        tunnelCount[p+2] = sf::Vector2f(pointX - tunnelSizeMin,pointY - tunnelSizeMin);
+                        tunnelCount[p+3] = sf::Vector2f(pointX - tunnelSizeMin,pointY);
                     }
 
                 }

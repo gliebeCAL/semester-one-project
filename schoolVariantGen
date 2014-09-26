@@ -214,7 +214,7 @@ int main()
 
 
 
-        for(int p = 0;p<21;p++)
+        for(int p=0;p<=20;p+=4)
         {
             if (firstTun == false)
             {
@@ -356,9 +356,9 @@ int main()
                     //Also, should be based on 10's/other value.
                     pointY = roomCount[firstRoomDir].position.y;
 
-                    if (pointX < (roomCount[firstRoomDir+1].position.x + 10))
+                    if (pointX < (roomCount[firstRoomDir+1].position.x + tunnelSizeMin))
                     {
-                        pointX = (roomCount[firstRoomDir+1].position.x + 10);
+                        pointX = (roomCount[firstRoomDir+1].position.x + tunnelSizeMin);
                         //Sets the maximum the X can be.
                     }
 
@@ -421,45 +421,45 @@ int main()
                     //Also, should be based on 10's/other value.
                     pointY = rand() % (roomCount[firstRoomDir-3].position.y - roomCount[firstRoomDir].position.y) + roomCount[firstRoomDir].position.y;
 
-                    if (pointY < (roomCount[firstRoomDir-3].position.y + tunnelSizeMin))
+                    if (pointY > (roomCount[firstRoomDir].position.y + tunnelSizeMin))
                     {
-                        pointY = (roomCount[firstRoomDir-3].position.y + tunnelSizeMin);
+                        pointY = (roomCount[firstRoomDir].position.y + tunnelSizeMin);
                         //Sets the maximum the X can be.
                     }
 
                     tunnelCount[p] = sf::Vector2f(pointX,pointY);
-                    tunnelCount[p+1] = sf::Vector2f(pointX,pointY - tunnelSizeMin);
+                    tunnelCount[p+1] = sf::Vector2f(pointX,pointY + tunnelSizeMin);
 
                     if (goL == true)
                     {
                         if (secondRoomDir % 4 == 0)
                         {
-                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY - tunnelSizeMin);
+                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY + tunnelSizeMin);
                             tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY);
                         }
                         else if (secondRoomDir % 4 == 1)
                         {
                             if (goR == false and goU == false and goD == false)
                             {
-                                tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY - tunnelSizeMin);
+                                tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY + tunnelSizeMin);
                                 tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY);
 
                                 tunSessionDone = true;
                             }
                             else
                             {
-                                tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY - tunnelSizeMin);
+                                tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY + tunnelSizeMin);
                                 tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY);
                             }
                         }
                         else if (secondRoomDir % 4 == 2)
                         {
-                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x + tunnelSizeMin,pointY - tunnelSizeMin);
+                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x + tunnelSizeMin,pointY + tunnelSizeMin);
                             tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x + tunnelSizeMin,pointY);
                         }
                         else if (secondRoomDir % 4 == 3)
                         {
-                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY - tunnelSizeMin);
+                            tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY + tunnelSizeMin);
                             tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x - tunnelSizeMin,pointY);
                         }
                         // 30 is a random value. It would normally be a random number so long as it exceeds 30. Probably a multiple of 10/whatever,
@@ -467,169 +467,261 @@ int main()
                     }
                     else
                     {
-                        tunnelCount[p+2] = sf::Vector2f(pointX - tunnelSizeMin,pointY - tunnelSizeMin);
+                        tunnelCount[p+2] = sf::Vector2f(pointX - tunnelSizeMin,pointY + tunnelSizeMin);
                         tunnelCount[p+3] = sf::Vector2f(pointX - tunnelSizeMin,pointY);
                     }
 
                 }
 
                 p += 4;
+                firstTun = true;
             }
 
-                firstTun = true;
 
-                if (tunPrevDir == 0)
+            if (tunPrevDir == 0 and tunSessionDone == false)
+            {
+                if (goL == true)
                 {
-                    if (goL == true)
+                    tunPrevDir = 3;
+                    goL = false;
+
+                    pointX = tunnelCount[p-1] + tunnelSizeMin;
+                    pointY = tunnelCount[p-1] - tunnelSizeMin;
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = sf::Vector2f(pointX,pointY + tunnelSizeMin);
+
+                    if (goR == false and goU == false and goD == false)
                     {
-                        tunPrevDir = 3;
-                        goL = false;
-
-                        pointX = ;
-                        pointY = ;
-
-                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
-                        tunnelCount[p+1] = ;
-                        tunnelCount[p+2] = ;
-                        tunnelCount[p+3] = ;
-
-                    }
-                    else if (goR == true)
-                    {
-                        tunPrevDir = 1;
-                        goR = false;
-
-                        pointX = ;
-                        pointY = ;
-
-                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
-                        tunnelCount[p+1] = ;
-                        tunnelCount[p+2] = ;
-                        tunnelCount[p+3] = ;
-
+                        //If it only needs to go left, finish up.
+                        tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY + tunnelSizeMin);
+                        tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY);
                     }
                     else
                     {
-                        //If neither is true...
+                        tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY + tunnelSizeMin);
+                        tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY);
+                        //Would need to adjust if it should go over or under, but this will do for now.
                     }
 
                 }
-                else if (tunPrevDir == 1)
+                else if (goR == true)
                 {
-                    if (goU == true)
+                    tunPrevDir = 1;
+                    goR = false;
+
+                    pointX = tunnelCount[p-1];
+                    pointY = tunnelCount[p-1] - tunnelSizeMin;
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = sf::Vector2f(pointX,pointY + tunnelSizeMin);
+
+                    if (goL == false and goU == false and goD == false)
                     {
-                        tunPrevDir = 0;
-                        goU = false;
-
-                        pointX = ;
-                        pointY = ;
-
-                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
-                        tunnelCount[p+1] = ;
-                        tunnelCount[p+2] = ;
-                        tunnelCount[p+3] = ;
-
-                    }
-                    else if (goD == true)
-                    {
-                        tunPrevDir = 2;
-                        goD = false;
-
-                        pointX = ;
-                        pointY = ;
-
-                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
-                        tunnelCount[p+1] = ;
-                        tunnelCount[p+2] = ;
-                        tunnelCount[p+3] = ;
-
+                        //If it only needs to go left, finish up.
+                        tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY + tunnelSizeMin);
+                        tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY);
                     }
                     else
                     {
-                        //If neither is true...
+                        tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY + tunnelSizeMin);
+                        tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY);
+                        //Would need to adjust if it should go over or under, but this will do for now.
                     }
-
                 }
-                else if (tunPrevDir == 2)
+                else
                 {
-                    if (goL == true)
+                    tunSessionDone = true;
+                    //If neither is true...
+                }
+
+            }
+            else if (tunPrevDir == 1 and tunSessionDone == false)
+            {
+                if (goU == true)
+                {
+                    tunPrevDir = 0;
+                    goU = false;
+
+                    pointX = tunnelCount[p-1];
+                    pointY = tunnelCount[p-1] + tunnelSizeMin;
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = sf::Vector2f(pointX + tunnelSizeMin,pointY);
+
+                    if (goL == false and goR == false and goD == false)
                     {
-                        tunPrevDir = 3;
-                        goL = false;
-
-                        pointX = ;
-                        pointY = ;
-
-                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
-                        tunnelCount[p+1] = ;
-                        tunnelCount[p+2] = ;
-                        tunnelCount[p+3] = ;
-
-                    }
-                    else if (goR == true)
-                    {
-                        tunPrevDir = 1;
-                        goR = false;
-
-                        pointX = ;
-                        pointY = ;
-
-                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
-                        tunnelCount[p+1] = ;
-                        tunnelCount[p+2] = ;
-                        tunnelCount[p+3] = ;
-
+                        //If it only needs to go left, finish up.
+                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y);
+                        tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y);
                     }
                     else
                     {
-                        //If neither is true...
+                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y);
+                        tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y);
+                        //Would need to adjust if it should go over or under, but this will do for now.
                     }
 
                 }
-                else if (tunPrevDir == 3)
+                else if (goD == true)
                 {
-                    if (goU == true)
+                    tunPrevDir = 2;
+                    goD = false;
+
+                    pointX = tunnelCount[p-1];
+                    pointY = tunnelCount[p-1];
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = sf::Vector2f(pointX + tunnelSizeMin,pointY);
+
+                    if (goL == false and goU == false and goR == false)
                     {
-                        tunPrevDir = 0;
-                        goU = false;
-
-                        pointX = ;
-                        pointY = ;
-
-                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
-                        tunnelCount[p+1] = ;
-                        tunnelCount[p+2] = ;
-                        tunnelCount[p+3] = ;
-
-                    }
-                    else if (goD == true)
-                    {
-                        tunPrevDir = 2;
-                        goD = false;
-
-                        pointX = ;
-                        pointY = ;
-
-                        tunnelCount[p] = sf::Vector2f(pointX,pointY);
-                        tunnelCount[p+1] = ;
-                        tunnelCount[p+2] = ;
-                        tunnelCount[p+3] = ;
-
+                        //If it only needs to go left, finish up.
+                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y);
+                        tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y);
                     }
                     else
                     {
-                        //If neither is true...
+                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y);
+                        tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y);
+                        //Would need to adjust if it should go over or under, but this will do for now.
+                    }
+                }
+                else
+                {
+                    tunSessionDone = true;
+                    //If neither is true...
+                }
+
+            }
+            else if (tunPrevDir == 2 and tunSessionDone == false)
+            {
+                if (goL == true)
+                {
+                    tunPrevDir = 3;
+                    goL = false;
+
+                    pointX = tunnelCount[p-1] + tunnelSizeMin;
+                    pointY = tunnelCount[p-1];
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = sf::Vector2f(pointX,pointY + tunnelSizeMin);
+
+                    if (goR == false and goU == false and goD == false)
+                    {
+                        //If it only needs to go left, finish up.
+                        tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY + tunnelSizeMin);
+                        tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY);
+                    }
+                    else
+                    {
+                        tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY + tunnelSizeMin);
+                        tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY);
+                        //Would need to adjust if it should go over or under, but this will do for now.
+                    }
+                }
+                else if (goR == true)
+                {
+                    tunPrevDir = 1;
+                    goR = false;
+
+                    pointX = tunnelCount[p-1];
+                    pointY = tunnelCount[p-1];
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = sf::Vector2f(pointX,pointY + tunnelSizeMin);
+
+                    if (goL == false and goU == false and goD == false)
+                    {
+                        //If it only needs to go left, finish up.
+                        tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY + tunnelSizeMin);
+                        tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY);
+                    }
+                    else
+                    {
+                        tunnelCount[p+2] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY + tunnelSizeMin);
+                        tunnelCount[p+3] = sf::Vector2f(roomCount[secondRoomDir].position.x,pointY);
+                        //Would need to adjust if it should go over or under, but this will do for now.
                     }
 
                 }
+                else
+                {
+                    tunSessionDone = true;
+                    //If neither is true...
+                }
+
+            }
+            else if (tunPrevDir == 3 and tunSessionDone == false)
+            {
+                if (goU == true)
+                {
+                    tunPrevDir = 0;
+                    goU = false;
+
+                    pointX = tunnelCount[p-1] - tunnelSizeMin;
+                    pointY = tunnelCount[p-1] + tunnelSizeMin;
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = sf::Vector2f(pointX + tunnelSizeMin,pointY);
+
+                    if (goL == false and goR == false and goD == false)
+                    {
+                        //If it only needs to go left, finish up.
+                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y);
+                        tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y);
+                    }
+                    else
+                    {
+                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y);
+                        tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y);
+                        //Would need to adjust if it should go over or under, but this will do for now.
+                    }
+                }
+                else if (goD == true)
+                {
+                    tunPrevDir = 2;
+                    goD = false;
+
+                    pointX = tunnelCount[p-1] - tunnelSizeMin;
+                    pointY = tunnelCount[p-1];
+
+                    tunnelCount[p] = sf::Vector2f(pointX,pointY);
+                    tunnelCount[p+1] = sf::Vector2f(pointX + tunnelSizeMin,pointY);
+
+                    if (goL == false and goU == false and goR == false)
+                    {
+                        //If it only needs to go left, finish up.
+                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y);
+                        tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y);
+                    }
+                    else
+                    {
+                        tunnelCount[p+2] = sf::Vector2f(pointX + tunnelSizeMin,roomCount[secondRoomDir].position.y);
+                        tunnelCount[p+3] = sf::Vector2f(pointX,roomCount[secondRoomDir].position.y);
+                        //Would need to adjust if it should go over or under, but this will do for now.
+                    }
+                }
+                else
+                {
+                    tunSessionDone = true;
+                    //If neither is true...
+                }
+
+
+            }
 
                 if ()
                 {
+                    //This is for detection and finishing purposes.
+
                     //Wait. Do I even need an if statement for this? I don't think I do.
                     //Oh, wait, no, it's for if it's here to there, etc.
                     //This one will check after the movements and dictate the directions.
                 }
+
             }
+            tunSessionDone = false;
             firstTun = false;
         }
 

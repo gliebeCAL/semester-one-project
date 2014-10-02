@@ -744,15 +744,15 @@ int main()
                     {
                         if (tunnelCount[p+3].position.x > roomCount[secondRoomDir].position.x)
                         {
-                            goR = true;
-                            goL = false;
+                            goR = false;
+                            goL = true;
                             goU = false;
                             goD = false;
                         }
                         else if (tunnelCount[p+3].position.x < roomCount[secondRoomDir].position.x)
                         {
-                            goR = false;
-                            goL = true;
+                            goR = true;
+                            goL = false;
                             goU = false;
                             goD = false;
                         }

@@ -1,12 +1,15 @@
 #ifndef DUNGEN_H
 #define DUNGEN_H
 
+//Discontinued.
 
 class DunGen
 {
     public:
-        DunGen(int levelSizeX,int levelSizeY,int difficulty);
-        //Does nothing
+        DunGen();
+        //
+        DunGen(int);
+        //This is just a test.
 
         void Generate(int levelSizeX,int levelSizeY,int difficulty);
         //Generates the level, The size of the level in the X direction, the size in the Y, the difficulty for the dungeons.
@@ -21,13 +24,10 @@ class DunGen
 
         void TunnelUp(int t);
         //Goes Up
-
         void TunnelRight(int t);
         //Goes Right
-
         void TunnelDown(int t);
         //Goes Down
-
         void TunnelLeft(int t);
         //Goes Left
 

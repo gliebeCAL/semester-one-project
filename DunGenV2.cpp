@@ -1,8 +1,9 @@
 #include "DunGen.h"
 #include <stdlib.h>
 #include <time.h>
+#include <iostream>
 
-//Note to self: I need to seed the rand at some point.
+//Discontinued. Again.
 
 /*
 5-Last Room
@@ -18,16 +19,33 @@
 3-Left
 */
 
-DunGen::DunGen(int levelSizeX,int levelSizeY,int difficulty)
+DunGen::DunGen()
 {
-    srand (time(NULL));
+    std::cout << "Mark 2!" << std::endl;
+
+    srand(time(NULL));
     //Sets seed for randomizing
+
     ResetLevel();
     //Sets all the level to 0 so it can be drawn.
-    Generate(levelSizeX,levelSizeY,difficulty);
-    //Generates the level when it's created. The level can be regenerated again by running reset, then
-    //generate again.
 
+    Generate(50,50,0);
+
+    std::cout << "This is a test." << std::endl << "Yo. Lo. Swag. Swag. Swag." << std::endl;
+
+    for (int x=0;x<=50;x++)
+    {
+        for(int y=0;y<=50;y++)
+        {
+            std::cout << level[x][y] << ", ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+DunGen::DunGen(int test)
+{
+    std::cout << "Can you hear me now?";
 }
 
 void DunGen::Generate(int levelSizeX,int levelSizeY,int difficulty)
@@ -102,8 +120,8 @@ void DunGen::Generate(int levelSizeX,int levelSizeY,int difficulty)
             }
         }
     }
-
-    for(int t=1;t<roomTotal;t++)
+    /*
+    for(int t=1;t<roomTotal;t+=4)
     {
         //Generates the tunnels
         //Chooses the first point
@@ -178,7 +196,7 @@ void DunGen::Generate(int levelSizeX,int levelSizeY,int difficulty)
         cornerAccess++;
         tunnelContact = false;
     }
-
+*/
 
 
 }
@@ -565,9 +583,9 @@ void DunGen::TunnelCreate(int t)
 
 void DunGen::ResetLevel()
 {
-    for(int x=0;x<9999;x++)
+    for(int x=0;x<=9999;x++)
     {
-        for(int y=0;y<9999;y++)
+        for(int y=0;y<=9999;y++)
         {
             level[x][y] = 0;
         }

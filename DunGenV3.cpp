@@ -15,13 +15,15 @@ void DunGen::Generate(int xCap,int yCap)
 
     Tunnels(xCap,yCap,5,3);
 
+    Rooms(xCap,yCap,5,4);
+
 }
 
 void DunGen::Tunnels(int xCap,int yCap,int difficulty,int roomType)
 {
     //To do: Add an extra
     lineLength = 10;
-    //Decides the size of the tunnel. This is actually one OVER what it should be (0-9, which is 10 digits.)
+    //Decides the size of the tunnel. This is actually one OVER what it should be (0-9, which is 10 digits.). Replace with a formula later.
     tunX = rand() % (xCap+1);
     tunY = rand() % (yCap+1);
 
@@ -212,7 +214,75 @@ void DunGen::Tunnels(int xCap,int yCap,int difficulty,int roomType)
 
 void DunGen::Rooms(int xCap,int yCap,int difficulty,int roomType)
 {
+    roomTotal = 4;
+    //So the formula probably has something to do with rand and difficulty, plus a flat 2 at the end (Beginning and end)
+    //Again, is actually 1 over intended.
 
+    rWidth = 3;
+    rHeight = 3;
+    //Again, will be random for now. But this will do.
+    startXDist = rand() % (rWidth);
+    startYDist = rand() % (rHeight);
+    //For this, 0-2. Figures out the distance between the upper left of the room and the tunnel.
+    roomFX = firstTunX - startXDist;
+    roomFY = firstTunY - startYDist;
+    roomLX = roomFX + rWidth;
+    roomLY = roomFY + rHeight;
+
+    if (roomFX < 0)
+    {
+        roomFX -= roomFX;
+        roomLX -= roomFX;
+        //So -15 - (-15) = 0
+    }
+
+    if (roomLX > xCap)
+    {
+        roomFX -= roomLX - xCap;
+        roomLX -= roomLX - xCap;
+    }
+
+    if (roomFY < 0)
+    {
+        roomFY -= roomFY;
+        roomLY -= roomFY;
+        //So like, -5 - -5 would be 0.
+    }
+
+    if (roomLY > yCap)
+    {
+        roomFY -= roomLY - yCap;
+        roomLY -= roomLY - yCap;
+    }
+    //These four make sure rooms are never off the map.
+    //To do: Dedicate this map to the array.
+
+    /*
+    It seems it's not fond of me throwing double nested loops.
+    Or maybe it's the override it doesn't like?
+    //No, scratch all of that. It overrides just fine, it loops a nested loop fine. What seems to be
+    //the problem is that the initial variable can't equal another variable? And a while loop causes a crash.
+    //Hm.
+    */
+
+    for (int rx=roomFX;rx<roomLX;rx++)
+    {
+        for (int ry=roomFY;ry<roomLY;ry++)
+        {
+            if (level[rx][ry] < roomType)
+            {
+                level[rx][ry] += roomType;
+            }
+        }
+    }
+
+
+    //Last room
+
+    for(int r=1;r<roomTotal;r++)
+    {
+        //Makes the rest of the rooms.
+    }
 }
 
 void DunGen::ResetLevel()

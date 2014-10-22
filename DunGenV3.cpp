@@ -22,7 +22,7 @@ void DunGen::Generate(int xCap,int yCap)
 void DunGen::Tunnels(int xCap,int yCap,int difficulty,int roomType)
 {
     //To do: Add an extra
-    lineLength = 10;
+    lineLength = 15;
     //Decides the size of the tunnel. This is actually one OVER what it should be (0-9, which is 10 digits.). Replace with a formula later.
     tunX = rand() % (xCap+1);
     tunY = rand() % (yCap+1);
@@ -31,6 +31,8 @@ void DunGen::Tunnels(int xCap,int yCap,int difficulty,int roomType)
     levelYCap = yCap;
 
     level[tunX][tunY] = roomType;
+    tunLocX[0] = tunX;
+    tunLocY[0] = tunY;
 
     firstTunX = tunX;
     firstTunY = tunY;
@@ -151,6 +153,8 @@ void DunGen::Tunnels(int xCap,int yCap,int difficulty,int roomType)
         if (roomType > level[tunX][tunY])
         {
             level[tunX][tunY] = roomType;
+            tunLocX[t] = tunX;
+            tunLocY[t] = tunY;
         }
 
         if (direction != prevDir)
@@ -187,24 +191,10 @@ void DunGen::Tunnels(int xCap,int yCap,int difficulty,int roomType)
             if (roomType > level[tunX][tunY])
             {
                 level[tunX][tunY] = roomType;
+                tunLocX[t] = tunX;
+                tunLocY[t] = tunY;
             }
         }
-
-        //As a word of forethought, this is an extraordinarily bad method of generation.
-        //Try to find a way to generate it properly.
-        /*for (int x=0;x<= levelXCap;x++)
-        {
-            for (int y=0;y<=levelYCap;y++)
-            {
-                if (level[x][y] == 3)
-                {
-                    tunCount++;
-                    //There's probably a more efficient way of doing this. But for now, this'll do.
-                }
-            }
-        }*/
-
-
     }
     lastTunX = tunX;
     lastTunY = tunY;
@@ -214,6 +204,8 @@ void DunGen::Tunnels(int xCap,int yCap,int difficulty,int roomType)
 
 void DunGen::Rooms(int xCap,int yCap,int difficulty,int roomType)
 {
+    std::cout << "INITIATE ROOM CREATION" << std::endl;
+
     roomTotal = 4;
     //So the formula probably has something to do with rand and difficulty, plus a flat 2 at the end (Beginning and end)
     //Again, is actually 1 over intended.
@@ -224,36 +216,13 @@ void DunGen::Rooms(int xCap,int yCap,int difficulty,int roomType)
     startXDist = rand() % (rWidth);
     startYDist = rand() % (rHeight);
     //For this, 0-2. Figures out the distance between the upper left of the room and the tunnel.
+
     roomFX = firstTunX - startXDist;
     roomFY = firstTunY - startYDist;
     roomLX = roomFX + rWidth;
     roomLY = roomFY + rHeight;
 
-    if (roomFX < 0)
-    {
-        roomFX -= roomFX;
-        roomLX -= roomFX;
-        //So -15 - (-15) = 0
-    }
 
-    if (roomLX > xCap)
-    {
-        roomFX -= roomLX - xCap;
-        roomLX -= roomLX - xCap;
-    }
-
-    if (roomFY < 0)
-    {
-        roomFY -= roomFY;
-        roomLY -= roomFY;
-        //So like, -5 - -5 would be 0.
-    }
-
-    if (roomLY > yCap)
-    {
-        roomFY -= roomLY - yCap;
-        roomLY -= roomLY - yCap;
-    }
     //These four make sure rooms are never off the map.
     //To do: Dedicate this map to the array.
 
@@ -264,6 +233,54 @@ void DunGen::Rooms(int xCap,int yCap,int difficulty,int roomType)
     //the problem is that the initial variable can't equal another variable? And a while loop causes a crash.
     //Hm.
     */
+    RoomBoundsCheck(xCap,yCap);
+
+    firstRoomULX = roomFX;
+    firstRoomULY = roomFY;
+    firstRoomLRX = roomLX;
+    firstRoomLRY = roomLY;
+
+    for (int rx=roomFX;rx<roomLX;rx++)
+    {
+        for (int ry=roomFY;ry<roomLY;ry++)
+        {
+            if (level[rx][ry] < roomType)
+            {
+                level[rx][ry] += roomType;
+            }
+        }
+    }
+
+    //Last room
+    rWidth = 3;
+    rHeight = 3;
+    //Again, will be random for now. But this will do.
+    startXDist = rand() % (rWidth);
+    startYDist = rand() % (rHeight);
+    //For this, 0-2. Figures out the distance between the upper left of the room and the tunnel.
+
+    roomFX = lastTunX - startXDist;
+    roomFY = lastTunY - startYDist;
+    roomLX = roomFX + rWidth;
+    roomLY = roomFY + rHeight;
+
+
+    //These four make sure rooms are never off the map.
+    //To do: Dedicate this map to the array.
+
+    /*
+    It seems it's not fond of me throwing double nested loops.
+    Or maybe it's the override it doesn't like?
+    //No, scratch all of that. It overrides just fine, it loops a nested loop fine. What seems to be
+    //the problem is that the initial variable can't equal another variable? And a while loop causes a crash.
+    //Hm.
+    */
+    RoomBoundsCheck(xCap,yCap);
+
+    lastRoomULX = roomFX;
+    lastRoomULY = roomFY;
+    lastRoomLRX = roomLX;
+    lastRoomLRY = roomLY;
 
     for (int rx=roomFX;rx<roomLX;rx++)
     {
@@ -277,11 +294,22 @@ void DunGen::Rooms(int xCap,int yCap,int difficulty,int roomType)
     }
 
 
-    //Last room
-
     for(int r=1;r<roomTotal;r++)
     {
         //Makes the rest of the rooms.
+        rWidth = 3;
+        rHeight = 3;
+        //Will be random later.
+
+        startXDist = +1;
+        startYDist = tunLocY[rand()%(-1)+1];
+        //Should have a count of the amount of the tunnels.
+
+        roomFX = ;
+        roomFY = ;
+        roomLX = ;
+        roomLY = ;
+
     }
 }
 
@@ -391,4 +419,33 @@ void DunGen::TunLeft()
         direction = 3;
     }
 
+}
+
+void DunGen::RoomBoundsCheck(int xCap,int yCap)
+{
+    if (roomFX < 0)
+    {
+        roomLX -= roomFX;
+        roomFX -= roomFX;
+        //So -15 - (-15) = 0
+    }
+
+    if (roomLX > xCap)
+    {
+        roomFX -= roomLX - xCap;
+        roomLX -= roomLX - xCap;
+    }
+
+    if (roomFY < 0)
+    {
+        roomLY -= roomFY;
+        roomFY -= roomFY;
+        //So like, -5 - -5 would be 0.
+    }
+
+    if (roomLY > yCap)
+    {
+        roomFY -= roomLY - yCap;
+        roomLY -= roomLY - yCap;
+    }
 }

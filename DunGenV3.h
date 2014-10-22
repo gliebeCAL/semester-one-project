@@ -1,7 +1,6 @@
 #ifndef DUNGEN_H
 #define DUNGEN_H
 
-//Is still called just DunGen.
 
 class DunGen
 {
@@ -27,6 +26,8 @@ class DunGen
         void TunLeft();
         //Makes the tunnel. These might require adjustment for the bonus levels, specifically, so that the room check isn't
         //for just 3. The decision on what it should check for is up for debate (0? If it's lower?)
+        void RoomBoundsCheck(int xCap,int yCap);
+        //Checks if the room is in the bounds of the level.
 
         int level[100][100];
     protected:
@@ -49,9 +50,25 @@ class DunGen
         //Counts how many 3s there are in the area.
         int firstTunX,firstTunY,lastTunX,lastTunY;
         //Gets the first position and last position of the tunnel for room generation.
+        int tunLocX[255],tunLocY[255];
+        //Grabs the location of the tunnels
 
         int roomTotal;
         //Counts how many rooms there are.
+        int roomFX,roomFY;
+        //Designates the upper left corner of the room. F stands for "First"
+        int roomLX,roomLY;
+        //Designates the lower right corner of the room. L stands for "Last"
+        int rWidth,rHeight;
+        //Designates the room's width and height. r stands for rooms
+        int startXDist,startYDist;
+        //Figures out the distance between the tunnel and the upper left position.
+
+
+        int firstRoomULX,firstRoomULY,firstRoomLRX,firstRoomLRY,lastRoomULX,lastRoomULY,lastRoomLRX,lastRoomLRY;
+        //Gets the Upper left and lower right position of the first and last rooms.
+        //This is going to be useful later to place the spawn point and stairs.
+
 };
 
 #endif // DUNGEN_H

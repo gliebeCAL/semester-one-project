@@ -4,6 +4,7 @@
 #include <time.h>
 
 //Crashes on Dungeon Generation occasionally. It works, though.
+//Quick reminder that there are no random generating formulas, either.
 
 DunGen::DunGen(int xCap,int yCap)
 {

@@ -2,9 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
-
-//Crashes on Dungeon Generation occasionally. It works, though.
-//Quick reminder that there are no random generating formulas, either.
+#include <SFML/Graphics.hpp>
 
 DunGen::DunGen(int xCap,int yCap)
 {
@@ -480,4 +478,138 @@ void DunGen::RoomBoundsCheck(int xCap,int yCap)
         roomFY -= roomLY - yCap;
         roomLY -= roomLY - yCap;
     }
+}
+
+void DunGen::SpriteGenerate()
+{
+    for (int y=0;y<=10;y++)
+    {
+        for (int x=0;x<=10;x++)
+        {
+            std::cout << level[x][y] << ", ";
+
+            if (level[x][y] == 0)
+            {
+                level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
+                level_sprite[levelSize].color = sf::Color::Green;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50));
+                level_sprite[levelSize].color = sf::Color::Green;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Green;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50),(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Green;
+
+                levelSize++;
+                //That pseudo code should do it.
+
+
+                //Oh boy. This'll be about 5000 pixels. Well, camera's easy enough to do with the player. Maybe I'll put the
+                //the player in the first 3 or 4 space I can find. Or last. Whatever.
+                //And let's see. Maybe make a color code? 2 and 3 don't exist, player is blue, 0 is green 4 is red, 3 is...whatever's left. White?
+                //I suppose the game loop will check if the player can or can't go to a certain spot.
+
+            }
+            else if (level[x][y] == 1)
+            {
+                level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50));
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50),(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
+            }
+            else if (level[x][y] == 2)
+            {
+                level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
+                level_sprite[levelSize].color = sf::Color::Cyan;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50));
+                level_sprite[levelSize].color = sf::Color::Cyan;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Cyan;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50),(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Cyan;
+
+                levelSize++;
+
+            }
+            else if (level[x][y] == 3)
+            {
+                level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
+                level_sprite[levelSize].color = sf::Color::Yellow;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50));
+                level_sprite[levelSize].color = sf::Color::Yellow;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Yellow;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50),(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Yellow;
+
+                levelSize++;
+            }
+            else if (level[x][y] == 4)
+            {
+                level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
+                level_sprite[levelSize].color = sf::Color::Red;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50));
+                level_sprite[levelSize].color = sf::Color::Red;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Red;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50),(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Red;
+
+                levelSize++;
+            }
+        }
+    std::cout << std::endl;
+    }
+
 }

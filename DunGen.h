@@ -1,5 +1,6 @@
 #ifndef DUNGEN_H
 #define DUNGEN_H
+#include <SFML/Graphics.hpp>
 
 
 class DunGen
@@ -28,8 +29,13 @@ class DunGen
         //for just 3. The decision on what it should check for is up for debate (0? If it's lower?)
         void RoomBoundsCheck(int xCap,int yCap);
         //Checks if the room is in the bounds of the level.
+        void SpriteGenerate();
 
         int level[100][100];
+        sf::Vertex level_sprite[40000];
+
+        int levelXCap,levelYCap;
+        //Sets the caps on the level
     protected:
     private:
         int lineLength;
@@ -42,8 +48,6 @@ class DunGen
         //Gets the direction of the line
         int prevDir = 5;
         //gets the previous direction
-        int levelXCap,levelYCap;
-        //Sets the caps on the level
         int altDir;
         //Sets alternate directions.
         int tunCount = 0;
@@ -69,6 +73,10 @@ class DunGen
         //Gets the Upper left and lower right position of the first and last rooms.
         //This is going to be useful later to place the spawn point and stairs.
         int roomXInv,roomYInv;
+
+        int levelSize = 0;
+        //Makes the size of the room
+
 
 };
 

@@ -15,13 +15,14 @@ class Player
         void MoveRight();
         //These move it. Should be
 
-        sf::RectangleShape sprite;
+        sf::Sprite sprite;
         int posX,posY;
 
 
         //I'll probably need more things, like stats and inventory. But for now, this'll do.
     protected:
     private:
+        sf::Texture texture;
 };
 
 #endif // PLAYER_H

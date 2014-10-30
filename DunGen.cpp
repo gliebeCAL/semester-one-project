@@ -341,6 +341,11 @@ void DunGen::Rooms(int xCap,int yCap,int difficulty,int roomType)
         }
 
     }
+
+    //Makes stairs (Spawn point for the player)
+    startStairX = rand()%(firstRoomLRX - firstRoomULX)+firstRoomULX;
+    startStairY = rand()%(firstRoomLRY - firstRoomULY)+firstRoomULY;
+    level[startStairX][startStairY] = 5;
 }
 
 void DunGen::ResetLevel()
@@ -482,9 +487,9 @@ void DunGen::RoomBoundsCheck(int xCap,int yCap)
 
 void DunGen::SpriteGenerate()
 {
-    for (int y=0;y<=10;y++)
+    for (int y=0;y<=levelYCap;y++)
     {
-        for (int x=0;x<=10;x++)
+        for (int x=0;x<=levelXCap;x++)
         {
             std::cout << level[x][y] << ", ";
 
@@ -605,6 +610,28 @@ void DunGen::SpriteGenerate()
 
                 level_sprite[levelSize] = sf::Vector2f((x*50),(y*50)+50);
                 level_sprite[levelSize].color = sf::Color::Red;
+
+                levelSize++;
+            }
+            else if (level[x][y] == 5)
+            {
+                level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
+                level_sprite[levelSize].color = sf::Color::Blue;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50));
+                level_sprite[levelSize].color = sf::Color::Blue;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Blue;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50),(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Blue;
 
                 levelSize++;
             }

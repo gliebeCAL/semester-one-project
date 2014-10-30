@@ -19,9 +19,6 @@ int main()
     DunGen dungeon(10,10);
     Player pChar(50,50);
 
-    float camPosX = pChar.posX;
-    float camPosY = pChar.posY;
-
 
     sf::View camera;
     camera.setSize(800.f,600.f);
@@ -90,8 +87,9 @@ int main()
         }
         if (playerSpawned == false)
         {
+            pChar.Spawn(dungeon.startStairX,dungeon.startStairY);
             //Will later be used to place the player at the spawn location, but that's not implemented yet.
-            playerSpawned == true;
+            playerSpawned = true;
         }
 
 

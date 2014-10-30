@@ -36,6 +36,9 @@ class DunGen
 
         int levelXCap,levelYCap;
         //Sets the caps on the level
+
+        int startStairX,startStairY;
+        //Player start position
     protected:
     private:
         int lineLength;
@@ -76,7 +79,6 @@ class DunGen
 
         int levelSize = 0;
         //Makes the size of the room
-
 
 };
 

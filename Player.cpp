@@ -3,8 +3,10 @@
 
 Player::Player(int xSize,int ySize)
 {
-    sprite.setSize(sf::Vector2f(xSize,ySize));
-    sprite.setFillColor(sf::Color::Blue);
+    texture.loadFromFile("rat_bot_final.png");
+    sprite.setTexture(texture,false);
+    //Static texture, so false.
+    //Needs to be adjusted so it points to an actual sprite.
 
     //These two are temporary, to set the value of posX and posY
     posX = 0;
@@ -13,7 +15,6 @@ Player::Player(int xSize,int ySize)
 
 void Player::Spawn(int spawnX,int spawnY)
 {
-    sprite.setOrigin(sf::Vector2f(spawnX*50,spawnY*50));
     sprite.setPosition(sf::Vector2f(spawnX*50,spawnY*50));
     posX = spawnX;
     posY = spawnY;

@@ -355,6 +355,7 @@ void DunGen::ResetLevel()
         for (int y=0;y<=100;y++)
         {
             level[x][y] = 0;
+            levelOccupied[x][y] = false;
         }
     }
 

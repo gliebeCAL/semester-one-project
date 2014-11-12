@@ -2,11 +2,13 @@
 #include <DunGen.h>
 #include <SFML/Graphics.hpp>
 #include "Player.h"
+#include "Enemy.h"
+#include "Melee_Enemy.h"
 
 /*
 Note to self:
-Got an array to generate tunnels, need to I need to make them generate a consistent
-amount of tunnels. Then I need to make the rooms. That'll do for now. Bonus rooms later.
+Melee enemy is prototypically done (Need to implement stats, hitting, staying in the boundary, but it moves and
+                                    follows you.)
 */
 
 int main()
@@ -15,9 +17,12 @@ int main()
     //Used to see if the dungeon is generated yet.
     bool playerSpawned = false;
     //Used to see if the player has been spawned yet.
+    bool playerMoved = false;
 
     DunGen dungeon(10,10);
     Player pChar(50,50);
+    Melee_Enemy mEnemy(1,0,0,1,1,1,10,10);
+    mEnemy.GenerateSprite();
 
 
     sf::View camera;
@@ -49,31 +54,39 @@ int main()
                 //
                 if (event.key.code == sf::Keyboard::D)
                 {
-                    if (dungeon.level[pChar.posX + 1][pChar.posY] > 0 and pChar.posX+1 <= dungeon.levelXCap)
+                    if (dungeon.level[pChar.posX + 1][pChar.posY] > 0 and pChar.posX < dungeon.levelXCap)
                     {
                         pChar.MoveRight();
+                        playerMoved = true;
                     }
                 }
                 if (event.key.code == sf::Keyboard::A)
                 {
-                    if (dungeon.level[pChar.posX - 1][pChar.posY] > 0 and pChar.posX-1 >= 0)
+                    if (dungeon.level[pChar.posX - 1][pChar.posY] > 0 and pChar.posX > 0)
                     {
                         pChar.MoveLeft();
+                        playerMoved = true;
                     }
                 }
                 if (event.key.code == sf::Keyboard::S)
                 {
-                    if (dungeon.level[pChar.posX][pChar.posY + 1] > 0 and pChar.posY+1 <= dungeon.levelXCap)
+                    if (dungeon.level[pChar.posX][pChar.posY + 1] > 0 and pChar.posY < dungeon.levelXCap)
                     {
                         pChar.MoveDown();
+                        playerMoved = true;
                     }
                 }
                 if (event.key.code == sf::Keyboard::W)
                 {
-                    if (dungeon.level[pChar.posX][pChar.posY - 1] > 0 and pChar.posY-1 >= 0)
+                    if (dungeon.level[pChar.posX][pChar.posY - 1] > 0 and pChar.posY > 0)
                     {
                         pChar.MoveUp();
+                        playerMoved = true;
                     }
+                }
+                if (event.key.code == sf::Keyboard::Period)
+                {
+                    playerMoved = true;
                 }
             }
         }
@@ -97,11 +110,18 @@ int main()
         camera.setCenter(pChar.posX*50,pChar.posY*50);
         window.setView(camera);
 
+        if (playerMoved == true)
+        {
+            mEnemy.AIAction(10,10,pChar.posX,pChar.posY);
+            playerMoved = false;
+        }
+
 
 
         window.clear();
         window.draw(dungeon.level_sprite,40000,sf::Quads);
         window.draw(pChar.sprite);
+        window.draw(mEnemy.sprite);
         window.display();
     }
 

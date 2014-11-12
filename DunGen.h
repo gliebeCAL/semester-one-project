@@ -33,6 +33,7 @@ class DunGen
 
         int level[100][100];
         sf::Vertex level_sprite[40000];
+        bool levelOccupied[100][100];
 
         int levelXCap,levelYCap;
         //Sets the caps on the level

@@ -13,16 +13,19 @@ class Player
         void MoveDown();
         void MoveLeft();
         void MoveRight();
-        //These move it. Should be
+        //These move it.
+
+        int Attack(int eHealth);
 
         sf::Sprite sprite;
         int posX,posY;
 
-
+        int health;
         //I'll probably need more things, like stats and inventory. But for now, this'll do.
     protected:
     private:
         sf::Texture texture;
+        int attackpwr;
 };
 
 #endif // PLAYER_H

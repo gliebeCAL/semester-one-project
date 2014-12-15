@@ -14,9 +14,13 @@ void DunGen::Generate(int xCap,int yCap)
 
     srand(time(NULL));
 
+    ResetLevel();
+
     Tunnels(xCap,yCap,5,3);
 
     Rooms(xCap,yCap,5,4);
+
+    SpriteGenerate();
 
 }
 
@@ -346,6 +350,20 @@ void DunGen::Rooms(int xCap,int yCap,int difficulty,int roomType)
     startStairX = rand()%(firstRoomLRX - firstRoomULX)+firstRoomULX;
     startStairY = rand()%(firstRoomLRY - firstRoomULY)+firstRoomULY;
     level[startStairX][startStairY] = 5;
+
+    endStairX = rand()%(lastRoomLRX - lastRoomULX)+lastRoomULX;
+    endStairY = rand()%(lastRoomLRY - lastRoomULY)+lastRoomULY;
+    level[endStairX][endStairY] = 6;
+}
+
+void DunGen::Load(int xCap,int yCap)
+{
+    ResetLevel();
+
+    levelXCap = xCap;
+    levelYCap = yCap;
+
+    //Also load from file
 }
 
 void DunGen::ResetLevel()
@@ -355,6 +373,7 @@ void DunGen::ResetLevel()
         for (int y=0;y<=100;y++)
         {
             level[x][y] = 0;
+            levelOccupied[x][y] = false;
         }
     }
 
@@ -634,6 +653,29 @@ void DunGen::SpriteGenerate()
                 level_sprite[levelSize].color = sf::Color::Blue;
 
                 levelSize++;
+            }
+            else if (level[x][y] == 6)
+            {
+                level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50));
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50),(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
             }
         }
     std::cout << std::endl;

@@ -21,6 +21,9 @@ class DunGen
         void ResetLevel();
         //Sets every part of the level to 0.
 
+        void Load(int xCap, int yCap);
+        //Need to load the level
+
         void TunUp();
         void TunRight();
         void TunDown();
@@ -33,12 +36,15 @@ class DunGen
 
         int level[100][100];
         sf::Vertex level_sprite[40000];
+        bool levelOccupied[100][100];
 
         int levelXCap,levelYCap;
         //Sets the caps on the level
 
         int startStairX,startStairY;
         //Player start position
+        int endStairX,endStairY;
+        //Position to exit the level
     protected:
     private:
         int lineLength;

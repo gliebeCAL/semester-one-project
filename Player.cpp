@@ -3,14 +3,18 @@
 
 Player::Player(int xSize,int ySize)
 {
-    texture.loadFromFile("rat_bot_final.png");
+    texture.loadFromFile("player_final.png");
     sprite.setTexture(texture,false);
     //Static texture, so false.
     //Needs to be adjusted so it points to an actual sprite.
 
-    //These two are temporary, to set the value of posX and posY
+    //These two are default-in-case-spawn-doesn't-work.
     posX = 0;
     posY = 0;
+
+    //Sets stats
+    attackpwr = 5;
+    health = 20;
 }
 
 void Player::Spawn(int spawnX,int spawnY)
@@ -44,4 +48,13 @@ void Player::MoveRight()
 {
     sprite.move(50,0);
     posX += 1;
+}
+
+int Player::Attack(int eHealth)
+{
+    int newHealth;
+    newHealth = eHealth - attackpwr;
+
+    return newHealth;
+
 }

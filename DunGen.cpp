@@ -4,19 +4,30 @@
 #include <time.h>
 #include <SFML/Graphics.hpp>
 
-DunGen::DunGen(int xCap,int yCap)
+DunGen::DunGen(int xCap,int yCap,int difficulty)
 {
-    Generate(xCap,yCap);
+    Generate(xCap,yCap,difficulty);
 }
 
-void DunGen::Generate(int xCap,int yCap)
+void DunGen::Generate(int xCap,int yCap,int difficulty)
 {
 
     srand(time(NULL));
 
-    Tunnels(xCap,yCap,5,3);
+    //blankTexture.loadFromFile("sprites/dungeon_sprites/emptytile.png");
+    //lvlTexture.loadFromFile("sprites/dungeon_sprites/room.png");
+    //stairTexture.loadFromFile("sprites/dungeon_sprites/dstair.png");
 
-    Rooms(xCap,yCap,5,4);
+    ResetLevel();
+
+    Tunnels(xCap,yCap,difficulty,3);
+
+    Rooms(xCap,yCap,difficulty,4);
+
+    PlaceChest(difficulty);
+
+    SpriteGenerate();
+
 
 }
 
@@ -228,15 +239,7 @@ void DunGen::Rooms(int xCap,int yCap,int difficulty,int roomType)
 
 
     //These four make sure rooms are never off the map.
-    //To do: Dedicate this map to the array.
 
-    /*
-    It seems it's not fond of me throwing double nested loops.
-    Or maybe it's the override it doesn't like?
-    //No, scratch all of that. It overrides just fine, it loops a nested loop fine. What seems to be
-    //the problem is that the initial variable can't equal another variable? And a while loop causes a crash.
-    //Hm.
-    */
     RoomBoundsCheck(xCap,yCap);
 
     firstRoomULX = roomFX;
@@ -346,6 +349,54 @@ void DunGen::Rooms(int xCap,int yCap,int difficulty,int roomType)
     startStairX = rand()%(firstRoomLRX - firstRoomULX)+firstRoomULX;
     startStairY = rand()%(firstRoomLRY - firstRoomULY)+firstRoomULY;
     level[startStairX][startStairY] = 5;
+
+    endStairX = rand()%(lastRoomLRX - lastRoomULX)+lastRoomULX;
+    endStairY = rand()%(lastRoomLRY - lastRoomULY)+lastRoomULY;
+    level[endStairX][endStairY] = 6;
+}
+
+void DunGen::PlaceChest(int difficulty)
+{
+    int chesttotal = rand()%(difficulty) + 1;
+    //The highest difficulty is about 20, I think, so the most you could have is 5.
+    int chestX = rand()%levelXCap;
+    int chestY = rand()%levelYCap;
+
+
+    for(int c=0;c<chesttotal;c++)
+    {
+        chestTexture[c].loadFromFile("sprites/dungeon_sprites/chest.png");
+
+        while (level[chestX][chestY] != 4 and level[chestX][chestY] == false)
+        {
+
+            //So to leave this loop, the point has to be a 4 and the occupation has to be false.
+
+            //Make sure it's on 4 a and doesn't overlap with other chests.
+            chestX = rand()%levelXCap;
+            chestY = rand()%levelYCap;
+        }
+
+        chestLocX[c] = chestX;
+        chestLocY[c] = chestY;
+        chestsActive++;
+
+        chestSprite[c].setTexture(chestTexture[c],false);
+        chestSprite[c].setPosition(chestX*50,chestY*50);
+
+        chestOccupied[chestX][chestY] = true;
+    }
+}
+
+void DunGen::Load(int xCap,int yCap)
+{
+    ResetLevel();
+
+    levelXCap = xCap;
+    levelYCap = yCap;
+
+    //Also load from file
+    //Scratched. Just here for historical purposes.
 }
 
 void DunGen::ResetLevel()
@@ -355,9 +406,21 @@ void DunGen::ResetLevel()
         for (int y=0;y<=100;y++)
         {
             level[x][y] = 0;
+            levelOccupied[x][y] = false;
+            //chestOccupied[x][y] = false;
         }
     }
 
+    /*chest0Created = false;
+    chest1Created = false;
+    chest2Created = false;
+    chest3Created = false;
+    chest4Created = false;*/
+
+    for (int l=0;l<levelSize;l++)
+    {
+        level_sprite[l] = sf::Vector2f(0,0);
+    }
 }
 
 
@@ -495,6 +558,8 @@ void DunGen::SpriteGenerate()
 
             if (level[x][y] == 0)
             {
+                //sprite[x][y].setTexture(blankTexture,false);
+
                 level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
                 level_sprite[levelSize].color = sf::Color::Green;
 
@@ -523,25 +588,26 @@ void DunGen::SpriteGenerate()
                 //I suppose the game loop will check if the player can or can't go to a certain spot.
 
             }
+            /*
             else if (level[x][y] == 1)
             {
                 level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
-                level_sprite[levelSize].color = sf::Color::Magenta;
+                level_sprite[levelSize].color = sf::Color::Black;
 
                 levelSize++;
 
                 level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50));
-                level_sprite[levelSize].color = sf::Color::Magenta;
+                level_sprite[levelSize].color = sf::Color::Black;
 
                 levelSize++;
 
                 level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50)+50);
-                level_sprite[levelSize].color = sf::Color::Magenta;
+                level_sprite[levelSize].color = sf::Color::Black;
 
                 levelSize++;
 
                 level_sprite[levelSize] = sf::Vector2f((x*50),(y*50)+50);
-                level_sprite[levelSize].color = sf::Color::Magenta;
+                level_sprite[levelSize].color = sf::Color::Black;
 
                 levelSize++;
 
@@ -568,9 +634,10 @@ void DunGen::SpriteGenerate()
 
                 levelSize++;
 
-            }
+            }*/
             else if (level[x][y] == 3)
             {
+                //sprite[x][y].setTexture(lvlTexture,false);
                 level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
                 level_sprite[levelSize].color = sf::Color::Yellow;
 
@@ -593,6 +660,7 @@ void DunGen::SpriteGenerate()
             }
             else if (level[x][y] == 4)
             {
+                //sprite[x][y].setTexture(lvlTexture,false);
                 level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
                 level_sprite[levelSize].color = sf::Color::Red;
 
@@ -615,6 +683,7 @@ void DunGen::SpriteGenerate()
             }
             else if (level[x][y] == 5)
             {
+                //sprite[x][y].setTexture(lvlTexture,false);
                 level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
                 level_sprite[levelSize].color = sf::Color::Blue;
 
@@ -635,8 +704,56 @@ void DunGen::SpriteGenerate()
 
                 levelSize++;
             }
+            else if (level[x][y] == 6)
+            {
+                //sprite[x][y].setTexture(stairTexture,false);
+                level_sprite[levelSize] = sf::Vector2f(x*50,y*50);
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50));
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50)+50,(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
+                level_sprite[levelSize] = sf::Vector2f((x*50),(y*50)+50);
+                level_sprite[levelSize].color = sf::Color::Magenta;
+
+                levelSize++;
+
+            }
+
+            /*if (chestOccupied[x][y] == true)
+            {
+                //Draw a chest in that area
+                if (chest0Created == false)
+                {
+                    chest0Created = true;
+                }
+                else if (chest1Created == false)
+                {
+                    chest1Created = true;
+                }
+                else if (chest2Created == false)
+                {
+                    chest2Created = true;
+                }
+                else if (chest3Created == false)
+                {
+                    chest3Created = true;
+                }
+                else if (chest4Created == false)
+                {
+                    chest4Created = true;
+                }
+            }*/
         }
     std::cout << std::endl;
     }
-
 }
